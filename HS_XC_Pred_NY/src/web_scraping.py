@@ -14,8 +14,8 @@ def time_to_secs(time):
     time = minute+sec
     return time
 
-def get_team_event_results(id, state, gender, year, event, season='outdoor'):
-    html = requests.get(f'https://{state}.milesplit.com/rankings/events/high-school-{gender}/{season}-track-and-field/{event}m?year={year}&grade=returners&team={id}')
+def get_team_event_results(id, state, gender, year, event, season='outdoor-track-and-field'):
+    html = requests.get(f'https://{state}.milesplit.com/rankings/events/high-school-{gender}/{season}/{event}m?year={year}&grade=returners&team={id}')
     soup = BeautifulSoup(html.content, 'html.parser')
     data_class = soup.find('div', class_='data')
     times = [time.text for time in data_class.find_all('td', class_='time')]
