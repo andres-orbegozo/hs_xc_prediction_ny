@@ -1,4 +1,6 @@
 # files to ignore
 
 #ignore notebooks
+notebooks/
 *.ipynb
+data/

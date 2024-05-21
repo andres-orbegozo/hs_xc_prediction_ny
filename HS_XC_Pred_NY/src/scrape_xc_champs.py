@@ -2,7 +2,9 @@ from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 
-meet_id_list = ['563515', '578154', '563514', '579610', '563689', '563523', '563513', '566096', '580363', '566109', '567388', '564844', '566097', '567648', '567649', '563096']
+meet_id_list = ['563515', '563514', '579610', '563689', '563523', '563513', '566096', '580363', '566109', '567388', '564844', '566097', '567648', '567649', '563096']
+
+chsaa_link = 'https://ny.milesplit.com/meets/578154-chsaa-intersectionals-2023/results/989287/raw/'
 
 def race_results_from_link(link):
     site = requests.get(link)
@@ -179,8 +181,12 @@ def extract_meet_results(meet_id):
 
     return meet_df
 
-df = extract_meet_results(meet_id_list[15])
-print(df)
+for meet in meet_id_list:
+    temp = extract_meet_results(meet)
+    temp.to_csv(f'{meet}.csv', index=False)
+
+chsaa = race_results_from_link(chsaa_link)
+chsaa.to_csv('578154.csv')
 
         
 
