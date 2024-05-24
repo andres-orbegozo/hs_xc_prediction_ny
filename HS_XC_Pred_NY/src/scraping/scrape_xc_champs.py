@@ -100,17 +100,17 @@ def race_results_from_link(link):
             else:
                 j=j+1
 
-    # remove all grade identifiers
-    for i in range(len(spl_listList)):
-        element = spl_listList[i][2]
-        if 'SR' in element:
-            spl_listList[i].remove(element)
-        elif 'JR' in element:
-            spl_listList[i].remove(element)
-        elif 'SO' in element:
-            spl_listList[i].remove(element)
-        elif 'FR' in element:
-            spl_listList[i].remove(element)
+    # # remove all grade identifiers #comment out for chsaa
+    # for i in range(len(spl_listList)):
+    #     element = spl_listList[i][2]
+    #     if 'SR' in element:
+    #         spl_listList[i].remove(element)
+    #     elif 'JR' in element:
+    #         spl_listList[i].remove(element)
+    #     elif 'SO' in element:
+    #         spl_listList[i].remove(element)
+    #     elif 'FR' in element:
+    #         spl_listList[i].remove(element)
 
 
     #heading extraction
@@ -181,9 +181,9 @@ def extract_meet_results(meet_id):
 
     return meet_df
 
-for meet in meet_id_list:
-    temp = extract_meet_results(meet)
-    temp.to_csv(f'{meet}.csv', index=False)
+# for meet in meet_id_list:
+#     temp = extract_meet_results(meet)
+#     temp.to_csv(f'{meet}.csv', index=False)
 
 chsaa = race_results_from_link(chsaa_link)
 chsaa.to_csv('578154.csv')
