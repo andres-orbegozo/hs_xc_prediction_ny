@@ -47,6 +47,9 @@ def get_team_event_results(id, state, gender, year, event, season='outdoor-track
     
     team_df = pd.DataFrame(team_dict)
 
+    rows = len(team_df['Name'])
+    team_df['Event'] = [event] * rows
+
     return team_df
 
 def full_team_distance_results_joiner(id, state, gender, year, season='outdoor-track-and-field'):
