@@ -82,6 +82,18 @@ def race_results_from_link(link):
     if spl_listList[0][2] == 'PLACE':
         del spl_listList[0][2]
 
+    #remove i or t
+    for i in range(len(spl_listList)):
+        j=0
+        while j < len(spl_listList[i]):
+            element = spl_listList[i][j]
+            if element == 'i':
+                spl_listList[i].remove(element)
+            elif element == 't':
+                spl_listList[i].remove(element)
+            else:
+                j=j+1
+
     spl_listList = [correct for correct in spl_listList if len(correct) <= 6]
 
     # remove all class identifiers
@@ -100,17 +112,17 @@ def race_results_from_link(link):
             else:
                 j=j+1
 
-    # # remove all grade identifiers #comment out for chsaa
-    # for i in range(len(spl_listList)):
-    #     element = spl_listList[i][2]
-    #     if 'SR' in element:
-    #         spl_listList[i].remove(element)
-    #     elif 'JR' in element:
-    #         spl_listList[i].remove(element)
-    #     elif 'SO' in element:
-    #         spl_listList[i].remove(element)
-    #     elif 'FR' in element:
-    #         spl_listList[i].remove(element)
+    # remove all grade identifiers #comment out for chsaa
+    for i in range(len(spl_listList)):
+        element = spl_listList[i][2]
+        if 'SR' in element:
+            spl_listList[i].remove(element)
+        elif 'JR' in element:
+            spl_listList[i].remove(element)
+        elif 'SO' in element:
+            spl_listList[i].remove(element)
+        elif 'FR' in element:
+            spl_listList[i].remove(element)
 
 
     #heading extraction
@@ -185,9 +197,10 @@ def extract_meet_results(meet_id):
 #     temp = extract_meet_results(meet)
 #     temp.to_csv(f'{meet}.csv', index=False)
 
-chsaa = race_results_from_link(chsaa_link)
-chsaa.to_csv('578154.csv')
+# chsaa = race_results_from_link(chsaa_link)
+# chsaa.to_csv('578154.csv')
 
-        
+sec3 = extract_meet_results('563513')
+sec3.to_csv('563513.csv')
 
     
