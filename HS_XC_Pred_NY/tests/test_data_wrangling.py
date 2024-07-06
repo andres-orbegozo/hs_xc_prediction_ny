@@ -1,6 +1,11 @@
 import pytest
 import pandas as pd
-from tests import section_identifier, place_name_extract
+from tests import section_identifier, place_name_extract, bool_search_df_for_string
+
+def test_bool_search_df_for_string():
+    test_df = pd.DataFrame({'colA': ['abc', 'def', 'ghi'], 'colB': ['jkl', 'mno', 'pqr'], 'colC': ['stu', 'vwx', 'yz']})
+    expected = True
+    assert bool_search_df_for_string(test_df, 'pq') == expected
 
 def test_section_identifier(): #states and feds need to be done outside function #use inside standardizer
     # test dfs
@@ -17,7 +22,7 @@ def test_section_identifier(): #states and feds need to be done outside function
     sec4df = pd.DataFrame({'Place':[1, 26],'Name':['a', 'b'],'Team':['c', 'Corning'],'Pace':['2', '3'],'Time':['4', '5']})
     chsaa_df = pd.DataFrame({'Place':[1, 26],'Name':['a', 'b'],'Team':['Xavier', 'c'],'Pace':['2', '3'],'Time':['4', '5']})
     ais_df = pd.DataFrame({'Place':[1, 26],'Name':['a', 'b'],'Team':['c', 'Collegiate'],'Pace':['2', '3'],'Time':['4', '5']})
-    sec8df = pd.DataFrame({'Place':[1, 26],'Name':['a', 'b'],'Team':['Cornall', 'c'],'Pace':['2', '3'],'Time':['4', '5']})
+    sec8df = pd.DataFrame({'Place':[1, 26],'Name':['a', 'b'],'Team':['Syosset', 'c'],'Pace':['2', '3'],'Time':['4', '5']})
 
     # expected result dfs
     sec2df_exp = pd.DataFrame({'Place':[1, 26],'Name':['a', 'b'],'Team':['c', 'SaratogaSp'],'Pace':['2', '3'],'Time':['4', '5'], 'Section':['2', '2']})
@@ -33,7 +38,7 @@ def test_section_identifier(): #states and feds need to be done outside function
     sec4df_exp = pd.DataFrame({'Place':[1, 26],'Name':['a', 'b'],'Team':['c', 'Corning'],'Pace':['2', '3'],'Time':['4', '5'], 'Section':['4', '4']})
     chsaa_df_exp = pd.DataFrame({'Place':[1, 26],'Name':['a', 'b'],'Team':['Xavier', 'c'],'Pace':['2', '3'],'Time':['4', '5'], 'Section':['C', 'C']})
     ais_df_exp = pd.DataFrame({'Place':[1, 26],'Name':['a', 'b'],'Team':['c', 'Collegiate'],'Pace':['2', '3'],'Time':['4', '5'], 'Section':['I', 'I']})
-    sec8df_exp = pd.DataFrame({'Place':[1, 26],'Name':['a', 'b'],'Team':['Cornall', 'c'],'Pace':['2', '3'],'Time':['4', '5'], 'Section':['8', '8']})
+    sec8df_exp = pd.DataFrame({'Place':[1, 26],'Name':['a', 'b'],'Team':['Syosset', 'c'],'Pace':['2', '3'],'Time':['4', '5'], 'Section':['8', '8']})
     
     pd.testing.assert_frame_equal(section_identifier(sec1df), sec1df_exp)
     pd.testing.assert_frame_equal(section_identifier(sec2df), sec2df_exp)
