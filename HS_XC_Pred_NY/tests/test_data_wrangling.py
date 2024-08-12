@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from tests import section_identifier, place_name_extract, bool_search_df_for_string, extract_place, remove_nums, to_first_last, asterisk_sameplace_diffrace
+from tests import section_identifier, place_name_extract, bool_search_df_for_string, extract_place, remove_nums, to_first_last, asterisk_sameplace_diffrace, team_standard
 
 def test_bool_search_df_for_string():
     test_df = pd.DataFrame({'colA': ['abc', 'def', 'ghi'], 'colB': ['jkl', 'mno', 'pqr'], 'colC': ['stu', 'vwx', 'yz']})
@@ -136,8 +136,6 @@ def test_place_name_extract(): #use in xc standardizer #is always first two cols
     pd.testing.assert_frame_equal(place_name_extract(inputI), expected_df)
     pd.testing.assert_frame_equal(place_name_extract(inputJ), expected_df)
 
-# def standardize_teamname_and_time():
-#     assert ...
 
 def test_asterisk_sameplace_diffrace(): # use in xc standardizer # give all asterisks at first repetition and repeat for each new repeat
     test_df = pd.DataFrame({
@@ -150,11 +148,42 @@ def test_asterisk_sameplace_diffrace(): # use in xc standardizer # give all aste
     })
     pd.testing.assert_frame_equal(asterisk_sameplace_diffrace(test_df), expected_df)
 
+def test_team_standard():
+    input_df1 = pd.DataFrame({
+        'Place': ['1', '2'],
+        'Name': ['GeorgeWashington', 'JohnAdams'],
+        'YrSchool': ['SOVirginia', 'FRBoston']
+    })
+    input_df2 = pd.DataFrame({
+        'Place': ['1', '2'],
+        'Name': ['GeorgeWashington', 'JohnAdams'],
+        'YRTeam': ['SOVirginia', 'FRBoston']
+    })
+    input_df3 = pd.DataFrame({
+        'Place': ['1', '2'],
+        'Name': ['GeorgeWashington', 'JohnAdams'],
+        'Team': ['Virginia', 'Boston']
+    })
+    input_df4 = pd.DataFrame({
+        'Place': ['1', '2'],
+        'Name': ['GeorgeWashington', 'JohnAdams'],
+        'School': ['Virginia', 'Boston']
+    })
+    expected_df = pd.DataFrame({
+        'Place': ['1', '2'],
+        'Name': ['GeorgeWashington', 'JohnAdams'],
+        'Team': ['Virginia', 'Boston']
+    })
+    pd.testing.assert_frame_equal(team_standard(input_df1), expected_df)
+    pd.testing.assert_frame_equal(team_standard(input_df2), expected_df)
+    pd.testing.assert_frame_equal(team_standard(input_df3), expected_df)
+    pd.testing.assert_frame_equal(team_standard(input_df4), expected_df)
+
 
 def test_xc_standardizer(): #drop unnamed first columns #join outside function!!!!!!
     messedup_df = pd.DataFrame({
         'PLnmE': ['"26Lyons,Mark"', '"26Davis,Mike"'],
-        'YRtEm': ['JRRyansville', 'SOGeorgian'],
+        'YRSchool': ['JRSaratoga', 'SOGeorgian'],
         'TaYme': ['14:45.76', '19:43.22'],
         'Pace': ['4:45/MI', '6:20/MI'],
         'KmPace': ['2:57.15', '3:56.64']
@@ -162,7 +191,7 @@ def test_xc_standardizer(): #drop unnamed first columns #join outside function!!
     messedup_df2 = pd.DataFrame({
         'PlaYCe': [26, 26],
         'NmEPt': ['124MarkLyons', '161MikeDavis'],
-        'YRtEm': ['JRRyansville', 'SOGeorgian'],
+        'YRTeam': ['JRSaratoga', 'SOGeorgian'],
         'TaYme': ['14:45.76', '19:43.22'],
         'Pace': ['4:45/MI', '6:20/MI'],
         'KmPace': ['2:57.15', '3:56.64']
@@ -170,7 +199,8 @@ def test_xc_standardizer(): #drop unnamed first columns #join outside function!!
     expected_df = pd.DataFrame({
         'Place': ['26', '26*'],
         'Name': ['MarkLyons', 'MikeDavis'],
-        'Team': ['Ryansville', 'Georgian']
+        'Team': ['Saratoga', 'Georgian'],
+        'Section': ['2', '2']
     })
     pd.testing.assert_frame_equal(xc_standardizer(messedup_df), expected_df)
     pd.testing.assert_frame_equal(xc_standardizer(messedup_df2), expected_df)

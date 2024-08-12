@@ -115,7 +115,30 @@ def asterisk_sameplace_diffrace(dataframe):
 
     return dataframe
 
-# asterisk_sameplace_diffrace(pd.DataFrame({
-#         'Place': [1, 3, 4, 1, 4, 12, 4, 12, 15, 1, 1, 1, 1, 1, 1, 1],
-#         'Name': ['qwe', 'rty', 'uio', 'pas', 'dfg', 'hjk', 'lzx', 'cvb', 'nmq', 'wer', 'tyu', 'iop', 'asd', 'fgh', 'jkl', 'zxc']
-#     }))
+def team_standard(dataframe):
+    cols = pd.Series(dataframe.columns)
+    flags = ['SCHOOL', 'TEAM']
+    cols_up = cols.apply(lambda x: x.upper())
+    i=0
+    for col in cols_up:
+        for flag in flags:
+            if flag in col:
+                team = dataframe[cols[i]].apply(lambda x: x.replace('FR', ''))
+                team = team.apply(lambda x: x.replace('SO', ''))
+                team = team.apply(lambda x: x.replace('JR', ''))
+                team = team.apply(lambda x: x.replace('SR', ''))
+                dataframe[cols[i]] = team
+                dataframe.rename(columns={cols[i]: 'Team'}, inplace = True)
+        i = i+1
+    return dataframe
+
+
+
+def xc_standardizer(dataframe):
+    if '' in dataframe.columns:
+        dataframe.drop('', axis=1)
+    dataframe = section_identifier(dataframe)
+    dataframe = place_name_extract(dataframe)
+    dataframe = asterisk_sameplace_diffrace(dataframe)
+
+    
