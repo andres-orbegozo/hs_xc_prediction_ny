@@ -88,5 +88,34 @@ def place_name_extract(df):
     as_int = df['Place'].apply(lambda x: int(x))
     df['Place'] = as_int
 
-    print(df)
     return df
+
+def asterisk_sameplace_diffrace(dataframe):
+    place_list = dataframe['Place'].apply(lambda x: str(x))
+    final_list = []
+    while len(place_list) > 0:
+        list_len = len(place_list)
+        non_repeat = []
+        print(len(place_list))
+        for i in range(list_len):
+            if list_len == 1:
+                final_list.append(place_list[i])
+                place_list = []
+                break
+            if place_list[i] not in non_repeat:
+                non_repeat.append(place_list[i])
+            else:
+                final_list = final_list + non_repeat
+                place_list = pd.Series(place_list[i:])
+                place_list = place_list.apply(lambda x: x+'*')
+                place_list = list(place_list)
+                break
+    
+    dataframe['Place'] = final_list
+
+    return dataframe
+
+# asterisk_sameplace_diffrace(pd.DataFrame({
+#         'Place': [1, 3, 4, 1, 4, 12, 4, 12, 15, 1, 1, 1, 1, 1, 1, 1],
+#         'Name': ['qwe', 'rty', 'uio', 'pas', 'dfg', 'hjk', 'lzx', 'cvb', 'nmq', 'wer', 'tyu', 'iop', 'asd', 'fgh', 'jkl', 'zxc']
+#     }))

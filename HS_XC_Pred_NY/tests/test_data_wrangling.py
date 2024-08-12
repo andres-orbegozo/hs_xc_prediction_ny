@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from tests import section_identifier, place_name_extract, bool_search_df_for_string, extract_place, remove_nums, to_first_last
+from tests import section_identifier, place_name_extract, bool_search_df_for_string, extract_place, remove_nums, to_first_last, asterisk_sameplace_diffrace
 
 def test_bool_search_df_for_string():
     test_df = pd.DataFrame({'colA': ['abc', 'def', 'ghi'], 'colB': ['jkl', 'mno', 'pqr'], 'colC': ['stu', 'vwx', 'yz']})
@@ -141,12 +141,12 @@ def test_place_name_extract(): #use in xc standardizer #is always first two cols
 
 def test_asterisk_sameplace_diffrace(): # use in xc standardizer # give all asterisks at first repetition and repeat for each new repeat
     test_df = pd.DataFrame({
-        'Place': [1, 3, 4, 1, 4, 12, 4, 12, 15, 1, 1, 1, 1, 1, 1, 1],
-        'Name': ['qwe', 'rty', 'uio', 'pas', 'dfg', 'hjk', 'lzx', 'cvb', 'nmq', 'wer', 'tyu', 'iop', 'asd', 'fgh', 'jkl', 'zxc']
+        'Place': [1, 3, 4, 1, 4, 12, 1, 4, 12, 15, 1, 1, 1, 1, 1, 1, 1],
+        'Name': ['abc', 'qwe', 'rty', 'uio', 'pas', 'dfg', 'hjk', 'lzx', 'cvb', 'nmq', 'wer', 'tyu', 'iop', 'asd', 'fgh', 'jkl', 'zxc']
     })
     expected_df = pd.DataFrame({
-        'Place': ['1', '3', '4', '1*', '4*', '12*', '4**', '12**', '15**', '1***', '1****', '1*****', '1******', '1*******', '1********', '1*********'],
-        'Name': ['qwe', 'rty', 'uio', 'pas', 'dfg', 'hjk', 'lzx', 'cvb', 'nmq', 'wer', 'tyu', 'iop', 'asd', 'fgh', 'jkl', 'zxc']
+        'Place': ['1', '3', '4', '1*', '4*', '12*', '1**', '4**', '12**', '15**', '1***', '1****', '1*****', '1******', '1*******', '1********', '1*********'],
+        'Name': ['abc', 'qwe', 'rty', 'uio', 'pas', 'dfg', 'hjk', 'lzx', 'cvb', 'nmq', 'wer', 'tyu', 'iop', 'asd', 'fgh', 'jkl', 'zxc']
     })
     pd.testing.assert_frame_equal(asterisk_sameplace_diffrace(test_df), expected_df)
 
