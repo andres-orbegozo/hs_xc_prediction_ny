@@ -98,17 +98,17 @@ def asterisk_sameplace_diffrace(dataframe):
         non_repeat = []
         print(len(place_list))
         for i in range(list_len):
-            if list_len == 1:
+            if list_len == 1: #end the loop
                 final_list.append(place_list[i])
                 place_list = []
                 break
             if place_list[i] not in non_repeat:
                 non_repeat.append(place_list[i])
-            else:
-                final_list = final_list + non_repeat
+            else: #when repetition occurs, add an asterisk to all others
+                final_list = final_list + non_repeat 
                 place_list = pd.Series(place_list[i:])
                 place_list = place_list.apply(lambda x: x+'*')
-                place_list = list(place_list)
+                place_list = list(place_list) #make place list the remaining repeated places to shorten list
                 break
     
     dataframe['Place'] = final_list
@@ -122,7 +122,7 @@ def team_standard(dataframe):
     i=0
     for col in cols_up:
         for flag in flags:
-            if flag in col:
+            if flag in col: # remove class identifiers
                 team = dataframe[cols[i]].apply(lambda x: x.replace('FR', ''))
                 team = team.apply(lambda x: x.replace('SO', ''))
                 team = team.apply(lambda x: x.replace('JR', ''))
@@ -137,8 +137,21 @@ def team_standard(dataframe):
 def xc_standardizer(dataframe):
     if '' in dataframe.columns:
         dataframe.drop('', axis=1)
+    
+    # organize and standardize
     dataframe = section_identifier(dataframe)
     dataframe = place_name_extract(dataframe)
     dataframe = asterisk_sameplace_diffrace(dataframe)
+    dataframe = team_standard(dataframe)
+
+    place = dataframe['Place']
+    name = dataframe['Name']
+    team = dataframe['Team']
+    section = dataframe['Section']
+
+    # make dataframe smaller
+    dataframe = pd.DataFrame({'Place': place, 'Name': name, 'Team': team, 'Section': section})
+
+    return dataframe
 
     

@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from tests import section_identifier, place_name_extract, bool_search_df_for_string, extract_place, remove_nums, to_first_last, asterisk_sameplace_diffrace, team_standard
+from tests import section_identifier, place_name_extract, bool_search_df_for_string, extract_place, remove_nums, to_first_last, asterisk_sameplace_diffrace, team_standard, xc_standardizer
 
 def test_bool_search_df_for_string():
     test_df = pd.DataFrame({'colA': ['abc', 'def', 'ghi'], 'colB': ['jkl', 'mno', 'pqr'], 'colC': ['stu', 'vwx', 'yz']})
