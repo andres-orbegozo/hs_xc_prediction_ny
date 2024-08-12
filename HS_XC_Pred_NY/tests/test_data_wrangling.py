@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from tests import section_identifier, place_name_extract, bool_search_df_for_string
+from tests import section_identifier, place_name_extract, bool_search_df_for_string, extract_place, remove_nums, to_first_last
 
 def test_bool_search_df_for_string():
     test_df = pd.DataFrame({'colA': ['abc', 'def', 'ghi'], 'colB': ['jkl', 'mno', 'pqr'], 'colC': ['stu', 'vwx', 'yz']})
@@ -55,6 +55,33 @@ def test_section_identifier(): #states and feds need to be done outside function
     pd.testing.assert_frame_equal(section_identifier(chsaa_df), chsaa_df_exp)
     pd.testing.assert_frame_equal(section_identifier(ais_df), ais_df_exp)
 
+def test_extract_place():
+    input = '123james2'
+    output = extract_place(input)
+    expected = ['123', 'james2']
+    assert output == expected
+
+def test_remove_nums():
+    input = 'james25'
+    output = remove_nums(input)
+    expected = 'james'
+    assert output == expected
+
+def test_to_first_last():
+    input1 = '"d,cb"'
+    output1 = to_first_last(input1)
+    expected1 = 'cbd'
+    input2 = '"Orbegozo,Andres"'
+    output2 = to_first_last(input2)
+    expected2 = 'AndresOrbegozo'
+    input3 = 'AbcdEfghi'
+    output3 = to_first_last(input3)
+    expected3 = 'AbcdEfghi'
+
+    assert output1 == expected1
+    assert output2 == expected2
+    assert output3 == expected3
+
 def test_place_name_extract(): #use in xc standardizer #is always first two cols i believe
     inputA = pd.DataFrame({
         'Place':[4],
@@ -83,7 +110,6 @@ def test_place_name_extract(): #use in xc standardizer #is always first two cols
     })
     inputH = pd.DataFrame({
         'Name': ['"4bc,a"'],
-        'YearSchool': ['def']
     })
     inputI = pd.DataFrame({
         'PlaceTmPlNo.':[4],

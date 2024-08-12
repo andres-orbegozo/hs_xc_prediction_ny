@@ -19,8 +19,74 @@ def section_identifier(df):
 
 # IDENTIFY STATES N FEDS MANUALLY
 
-def place_name_extract(df):
-    cols = list(df.columns)
-    col1 = cols[0]
+def extract_place(string):
+    new = string[0:4]
+    nums = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    place = ''
+    for i in range(4):
+        for num in nums:
+            if new[i] == num:
+                place = place + num
+                break
+    final = string.replace(place, '')
+    return [place, final]
+
+def remove_nums(string):
+    nums = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    str_len = len(string)
+    new = ''
+    for i in range(str_len):
+        if string[i] not in nums:
+            new = new + string[i]
+    return new
+
+def to_first_last(string):
+    # check if string has a comma
+    str_len = len(string)
+    chars = list(string)
+    final = ''
+    if ',' in chars:
+        comma_index = string.index(',')
+        sur = string[:comma_index]
+        first = string[(comma_index+1):]
+        final = ''.join(first+sur)
+        final = final.replace('"', '')
+    else:
+        final = string
+    return final
     
-    return ...
+
+def place_name_extract(df):
+    # check if all of col1 is ints
+    cols = list(df.columns)
+    col1_name = cols[0]
+    col1 = df[col1_name]
+    boolin = col1.apply(lambda x: isinstance(x, int)).all()
+    # if true
+    if boolin == True:
+        df.rename(columns={col1_name: 'Place', cols[1]: 'Name'}, inplace=True)
+
+    # if false
+    else:
+        lol = col1.apply(lambda x: extract_place(x))
+        places = []
+        names = []
+        for lst in lol:
+            places.append(lst[0])
+            names.append(lst[1])
+        df.rename(columns={col1_name: 'Name'}, inplace=True)
+        df['Name'] = names
+        df.insert(0, 'Place', places)
+
+    # remove numbers from string and remove commas
+    no_num = df['Name'].apply(lambda x: remove_nums(x))
+    df['Name'] = no_num
+    final_names = df['Name'].apply(lambda x: to_first_last(x))
+    df['Name'] = final_names
+
+    # turn places into ints
+    as_int = df['Place'].apply(lambda x: int(x))
+    df['Place'] = as_int
+
+    print(df)
+    return df
