@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from tests import section_identifier, place_name_extract, bool_search_df_for_string, extract_place, remove_nums, to_first_last, asterisk_sameplace_diffrace, team_standard, xc_standardizer
+from tests import section_identifier, place_name_extract, bool_search_df_for_string, extract_place, remove_nums, to_first_last, asterisk_sameplace_diffrace, team_standard, xc_standardizer, athlete_id_assigner_track
 
 def test_bool_search_df_for_string():
     test_df = pd.DataFrame({'colA': ['abc', 'def', 'ghi'], 'colB': ['jkl', 'mno', 'pqr'], 'colC': ['stu', 'vwx', 'yz']})
@@ -204,6 +204,26 @@ def test_xc_standardizer(): #drop unnamed first columns #join outside function!!
     })
     pd.testing.assert_frame_equal(xc_standardizer(messedup_df), expected_df)
     pd.testing.assert_frame_equal(xc_standardizer(messedup_df2), expected_df)
+
+def test_athlete_id_assigner_track():
+    input_df = pd.DataFrame({
+        'Name': ['AbcDef', 'GhiJkl', 'AbcDef', 'GhiJkl', 'AbcDef', 'MnoPqr', 'AbcDef', 'AbcDef'],
+        'Grade': ['2024', '2023', '2024', '2023', '2025', '2025', '2024', '2024'],
+        'Team': ['Qwerty', 'Qwerty', 'Qwerty', 'Qwerty', 'Qwerty', 'Qwerty', 'Qwerty', 'UIOP'],
+        'Time': [122.06, 124.34, 269.64, 275.34, 280.01, 286.66, 603.22, 131.42],
+        'TeamID': ['10000', '10000', '10000', '10000', '10000', '10000', '10000', '10001'],
+        'Event': ['800', '800', '1600', '1600', '1600', '1600', '3200', '800']
+    })
+    expected_df = pd.DataFrame({
+        'Name': ['AbcDef', 'GhiJkl', 'AbcDef', 'GhiJkl', 'AbcDef', 'MnoPqr', 'AbcDef', 'AbcDef'],
+        'Grade': ['2024', '2023', '2024', '2023', '2025', '2025', '2024', '2024'],
+        'Team': ['Qwerty', 'Qwerty', 'Qwerty', 'Qwerty', 'Qwerty', 'Qwerty', 'Qwerty', 'UIOP'],
+        'Time': [122.06, 124.34, 269.64, 275.34, 280.01, 286.66, 603.22, 131.42],
+        'TeamID': ['10000', '10000', '10000', '10000', '10000', '10000', '10000', '10001'],
+        'Event': ['800', '800', '1600', '1600', '1600', '1600', '3200', '800'],
+        'AthleteID': [1, 2, 1, 2, 3, 4, 1, 5]
+    })
+    pd.testing.assert_frame_equal(athlete_id_assigner_track(input_df), expected_df)
 
 def test_tidy_track_data(): # drop blank col first before func is run
     input_df = pd.DataFrame({

@@ -154,4 +154,31 @@ def xc_standardizer(dataframe):
 
     return dataframe
 
+def athlete_id_assigner_track(dataframe):
+    num_entries = len(dataframe['Name'])
+    holder = [0] * num_entries
+    dataframe['AthleteID'] = holder # initialize athleteID col as zeroes
+    id = 1 #initialized ids
+    for row in range(num_entries):
+        if dataframe['AthleteID'][row] == 0:
+            dataframe.loc[row, 'AthleteID'] = id
+            # splitting data to search
+            already_done = dataframe.iloc[:row, :]
+            current = dataframe.iloc[row, :]
+            to_search = dataframe.iloc[row+1:, :]
+            # searching for same person
+            same_team = to_search[to_search['TeamID'] == current['TeamID']]
+            same_grade_st = same_team[same_team['Grade'] == current['Grade']]
+            same = same_grade_st[same_grade_st['Name'] == current['Name']]
+            # giving same athlete same ids
+            for ind in same.index:
+                dataframe.loc[ind, 'AthleteID'] = id
+            id = id+1
+    return dataframe
+
+        
+def tidy_track_data(dataframe):
+    dataframe = dataframe.drop(columns=[''])
+
+
     
